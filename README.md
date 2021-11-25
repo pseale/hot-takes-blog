@@ -1,2 +1,2 @@
 # hot-takes-blog
-spicy hot takes - for ffun!
+spicy hot takes - should be fun!
