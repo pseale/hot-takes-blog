@@ -13,32 +13,39 @@ WSL is the Windows Subsystem for Linux, and I find it useful doing linuxy things
 
 - ssh
 - developing shell scripts
-- running linuxy things like curl, base64, and openssl - sure, you CAN install and run them in Windows...
+- running curl, base64, openssl, and similar utilities
+- running bash one-liners found in internet tutorials
 - incompatible toolchains - most notably, TUIs like `tig` don't run in Windows
-- configuring neovim plugins for 17-19 hours every month (this is a joke, don't hurt me)
+- configuring neovim plugins for 17-20 hours every month (this is a joke, don't hurt me)
 
-WSL2 is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros, all without poisoning the Windows host. In other words, it's not 👻👻👻cygwin👻👻👻.
+WSL2 is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros, all without poisoning the Windows host. In other words, it's not 👻👻👻cygwin👻👻👻. Spoken in love, cygwin.
 
 ## Installing
 
-Installing is as simple as `wsl --install` if you're lucky; read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
+Installing is as simple as running `wsl --install` if you're lucky; read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
 
-Installing a specific distro happens through the Windows Store. I don't know why, either. Maybe forcing die-hard CLI advocates to install their favorite\* distro through the Windows Store is a kind of joke? Well, in any case it's hilarious.
+Installing a specific distro happens through the Windows Store. I don't know why, either. Maybe forcing die-hard CLI advocates to install their favorite\* GPL-licensed distro through the comically commercialized Windows Store is a kind of joke? Well, intentional or no, it's hilarious.
 
 As an aside, good luck with the Windows Store. It's somewhat buggy and opaque.
 
-## Surprisingly useful WSL tips
+## Choosing a distro to install
 
-To be clear, the following commands are run from `bash` in WSL, not from a Windows shell.
+If you don't know what to install, pick the most recent version of Ubuntu.
+
+If you think you want to argue with this deliberately simplistic advice, then you are **definitely** not the target audience for it. Go in peace and install your modified DragonflyBSD or whatever.
+
+## Surprisingly useful
 
 ```bash
-## launch Windows Explorer here
+# the following commands are all available from the WSL shell
+
+# launch Windows Explorer here
 cmd.exe /c start .
 
-## works on links too
+# works on links too
 cmd.exe /c start https://google.com/search?q=wsl+by+example+cheatsheet
 
-## pipe directly to the Windows clipboard
+# pipe directly to the Windows clipboard
 echo "${WSL_DISTRO_NAME}" | clip.exe
 ```
 
@@ -46,9 +53,9 @@ echo "${WSL_DISTRO_NAME}" | clip.exe
 
 **From Windows:**
 
-- `\\wsl$` - see all Distros
-- `\\wsl$\Ubuntu-20.04\home\p\.bashrc` - my bashrc (note everything after `\\wsl$\Ubuntu-20.04` is the Ubuntu filesystem)
-- `cd \\wsl$\Ubuntu-20.04` works in PowerShell, but DOS can't see it (not even via `net use`). And that's okay. DOS can slowly die and nobody will mourn. RIP DOS. RIP. But die already.
+- `\\wsl$\Ubuntu-20.04\home\p\.bashrc` - Two parts here. `\\wsl$\Ubuntu-20.04` gets you to the root of your Ubuntu 20.04 filesystem, and `/home/p/.bashrc` is the path within that filesystem)
+- Typing `\\wsl$` into the Explorer address bar shows all distros (and lets you lazily navigate with the mouse and other GUI affordances. I WOULD NEVER)
+- `cd \\wsl$\Ubuntu-20.04` works in PowerShell, and even cmd.exe has limited support for UNC-style paths
 
 **From Linux:**
 
@@ -62,12 +69,12 @@ echo "${WSL_DISTRO_NAME}" | clip.exe
   # boring parts redacted
   # ...
   ```
-- So, reference Windows files and paths, do something like e.g. `ls -al /mnt/c/Users/p/Desktop`.
+- So, to reference Windows files and paths, do something like e.g. `ls -al /mnt/c/Users/p/Desktop`. Two parts here. `/mnt/c` gets you to the C:, and `C:\Users\p\Desktop` is the path within the C: drive.
 - Windows paths from WSL are case-sensitive.
 
 ## wsl.exe usage
 
-`wsl.exe` is useful for specific things, but I mostly launch WSL directly from Windows Terminal.
+`wsl.exe` is useful for specific things, but I mostly launch WSL directly from Windows Terminal. Here are the specific things I've done with `wsl.exe`:
 
 ```powershell
 # start default distro and launch shell
@@ -80,7 +87,7 @@ wsl --list
 wsl --shutdown
 
 # both   --exec   and   --   run a command
-wsl --exec echo "I'm in unix! PowerShell version: $($PSVersionTable.PSVersion) (evaluated in PowerShell)"
+wsl --exec echo "I'm in unix! PowerShell version: $($PSVersionTable.PSVersion) <--evaluated in PowerShell in Windows"
 wsl -- ls -al
 
 
@@ -126,17 +133,17 @@ Be aware. I usually don't notice.
 
 This is a really boring topic, but if you need it, you need it.
 
-Git for Windows is probably checking out files with CRLF line endings (the specifics are configurable and too boring to fully explain - go read https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings). For most of us, if you commit files in Windows, push to GitHub, and pull them down in WSL, the line endings are LF in Linux and CRLF in Windows, which is probably what you want. However, if you're manipulating/accessing files between Linux and Windows, consider several solutions:
+Git for Windows is probably checking out files with CRLF line endings (the specifics are configurable and too boring to fully explain - go read https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings). For most of us, if you commit files in Windows, push to GitHub, and pull them down in WSL, the line endings are LF in WSL and CRLF in Windows, which is probably what you want. However, if you're manipulating/accessing files across Linux and Windows boundaries, consider several solutions:
 
 - `dos2unix` to manually convert a file from LF to CRLF from inside WSL
 - Manually load and change line endings in your text editor. E.g. in VS Code in the status bar, it will say LF or CRLF. You can change this by clicking on the LF (or CRLF) indicator in the status bar. Or change it by running `>Change End of Line Sequence` from the Command Palette.
 
-More permanent, team-friendly fixes:
+More permanent, team-friendly defaults:
 
 - via `.gitattributes` in specific repos, always checkout some file types (e.g. shell scripts) as LF
 - via `.gitattributes` in specific repos, always checkout all files as LF
 
-More permanent, isolated-to-your-computer fixes:
+More permanent, isolated defaults:
 
 - via `git config --global core.autocrlf`
 - via `git config --global core.eol`
