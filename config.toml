@@ -6,7 +6,7 @@ theme = 'm10c'
 [params]
   author = 'Peter Seale'
   description = "This is where I serve up hot takes. They're piping hot, spicy, and fun for all! I'm aware that I'm just a crank with a blog, and I take neither myself nor my hot takes too seriously."
-  avatar = './static/avatar-dignified-400x400.jpg'
+  avatar = './avatar-dignified-400x400.jpg'
 
 [[params.social]]
   icon = "github"
@@ -17,3 +17,10 @@ theme = 'm10c'
   icon = "twitter"
   name = "Twitter"
   url = "https://twitter.com/pseale"
+
+[menu]
+  [[menu.main]]
+    identifier = "standard-disclaimer"
+    name = "Standard disclaimer"
+    url = "/posts/standard-disclaimer"
+    weight = 1
