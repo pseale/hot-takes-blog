@@ -7,38 +7,36 @@ draft = true
 
 ###### Spicy Peppers Rating System: [🚫 | Mild and Nutritious; Blandly Educational ]
 
-## How is WSL useful?
+## What is WSL, and how is it useful?
 
-WSL is the Windows Subsystem for Linux, and I find it useful doing linuxy things, such as:
+WSL is the Windows Subsystem for Linux, and I use it to:
 
 - ssh
-- developing shell scripts
-- running curl, base64, openssl, and similar utilities
-- running bash one-liners found in internet tutorials
-- incompatible toolchains - most notably, TUIs like `tig` don't run in Windows
-- configuring neovim plugins for 17-20 hours every month (this is a joke, don't hurt me)
+- develop shell scripts
+- run curl, base64, openssl, and whatnot
+- run seedy bash one-liners found in on the internet
+- run Windows-incompatible tools - most notably, TUIs like `tig` don't run in Windows
+- configure neovim plugins for 17-20 hours every month (this is a joke, don't hurt me)
 
-WSL2 is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros, all without poisoning the Windows host. In other words, it's not 👻👻👻cygwin👻👻👻. Spoken in love, cygwin.
+WSL2 is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros without issue. In other words, it's doesn't do spooky things to your host like 👻👻👻cygwin👻👻👻. Spoken in love, cygwin.
 
-## Installing
+## Installing: WSL2 itself
 
 Installing is as simple as running `wsl --install` if you're lucky; read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
 
-Installing a specific distro happens through the Windows Store. I don't know why, either. Maybe forcing die-hard CLI advocates to install their favorite\* GPL-licensed distro through the comically commercialized Windows Store is a kind of joke? Well, intentional or no, it's hilarious.
+You will need to Enable Virtualization in your BIOS if it isn't already enabled. Good luck. Everyone's BIOS is different. These instructions are pretty good? https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap `Del`, `F1`, `F2`, `F8`, `F12` all together, as quickly as possible, and think happy thoughts.
 
-As an aside, good luck with the Windows Store. It's somewhat buggy and opaque.
+## Installing: a linux distro
 
-## Choosing a distro to install
+Installing a specific distro happens through the Windows Store. I don't know why, either. Maybe forcing die-hard CLI advocates to install their favorite GPL-licensed distro through the comically commercialized Windows Store is a kind of joke? Well, intentional or no, it's hilarious.
 
-If you don't know what to install, pick the most recent version of Ubuntu.
+If you don't know what distro to install, pick the most recent version of Ubuntu. And if you think you want to argue with this deliberately simplistic advice, then you are **definitely** not the target audience for it. Go in peace.
 
-If you think you want to argue with this deliberately simplistic advice, then you are **definitely** not the target audience for it. Go in peace and install your modified DragonflyBSD or whatever.
+## Surprisingly useful things
 
-## Surprisingly useful
+WSL can launch Windows programs and use them in pipelines. There are some great things you can do with this _synergy_.
 
 ```bash
-# the following commands are all available from the WSL shell
-
 # launch Windows Explorer here
 cmd.exe /c start .
 
@@ -49,12 +47,19 @@ cmd.exe /c start https://google.com/search?q=wsl+by+example+cheatsheet
 echo "${WSL_DISTRO_NAME}" | clip.exe
 ```
 
+You can access WSL from PowerShell on Windows, but I haven't found many good uses for it. I guess I could do something like the following?
+
+```powershell
+# base64-encode whatever's on the clipboard, and put that back on the clipboard
+Get-Clipboard | wsl base64 | Set-Clipboard
+```
+
 ## Accessing files
 
 **From Windows:**
 
-- `\\wsl$\Ubuntu-20.04\home\p\.bashrc` - Two parts here. `\\wsl$\Ubuntu-20.04` gets you to the root of your Ubuntu 20.04 filesystem, and `/home/p/.bashrc` is the path within that filesystem)
-- Typing `\\wsl$` into the Explorer address bar shows all distros (and lets you lazily navigate with the mouse and other GUI affordances. I WOULD NEVER)
+- `\\wsl$\Ubuntu-20.04\home\p\.bashrc` - The full path is formed as such: `\\wsl$\Ubuntu-20.04` is the root of the Ubuntu 20.04 filesystem, and `/home/p/.bashrc` is the path within that filesystem
+- Typing `\\wsl$` into the Explorer address bar shows all distros (and lets you lazily navigate with the mouse and other GUI affordances. BUT I WOULD NEVER)
 - `cd \\wsl$\Ubuntu-20.04` works in PowerShell, and even cmd.exe has limited support for UNC-style paths
 
 **From Linux:**
@@ -65,12 +70,10 @@ echo "${WSL_DISTRO_NAME}" | clip.exe
   > mount
   C:\ on /mnt/c type drvfs (rw,noatime,uid=1000,gid=1000,case=off)
   D:\ on /mnt/d type drvfs (rw,noatime,uid=1000,gid=1000,case=off)
-  # ...
-  # boring parts redacted
-  # ...
+  # ... boring parts redacted ...
   ```
-- So, to reference Windows files and paths, do something like e.g. `ls -al /mnt/c/Users/p/Desktop`. Two parts here. `/mnt/c` gets you to the C:, and `C:\Users\p\Desktop` is the path within the C: drive.
-- Windows paths from WSL are case-sensitive.
+- So, to reference Windows files and paths, do something like e.g. `ls -al /mnt/c/Users/p/Desktop`. The full path is formed as such: `/mnt/c` gets you to the C:, and `\Users\p\Desktop` is the path within the C: drive.
+- Windows paths referenced from WSL are case-sensitive.
 
 ## wsl.exe usage
 
@@ -93,35 +96,30 @@ wsl -- ls -al
 
 # SUBTLE DIFFERENCE BELOW - PAY ATTENTION:
 
-# this echoes back      WSL distro: Ubuntu-20.04
+# these echo back       WSL distro: Ubuntu-20.04
+wsl echo "WSL distro: `${WSL_DISTRO_NAME}"
 wsl -- echo "WSL distro: `${WSL_DISTRO_NAME}"
 
 # this echoes back      WSL Distro: ${WSL_DISTRO_NAME}
 wsl --exec echo "WSL Distro: `${WSL_DISTRO_NAME}"
 ```
 
-## VS Code
+## Seamless Text Editing: VS Code
 
-VS Code (running in Windows) seamlessly edits files in WSL2. `code .` loads the current directory into VS Code.
+VS Code (running in Windows) seamlessly edits files in WSL2. `code .` launches VS Code with the current directory as its workspace.
 
-## Accessing WSL From Windows Terminal
+## Seamless Terminal Experience: Windows Terminal
 
-I launch the Ubuntu 20.04 shell with `CTRL` + `SHIFT` + `2`. Windows Terminal is highly configurable, so your experience may vary.
+I launch the Ubuntu 20.04 shell in a new tab in Windows Terminal with `CTRL` + `SHIFT` + `2`. Windows Terminal is highly configurable, so your experience may vary.
 
 You can (if desired) set WSL as the default Profile for Windows Terminal.
 
 ## WSL: Turning it off and on again
 
-These are the Baby Bear, Mama Bear, and Papa Bear of WSL troubleshooting options. (We don't talk about the Reboot-Windows Bear.)
+There are two options here: the one you hope works, and the one you know works. WSL's `--shutdown` command is usually effective.
 
-- `wsl --terminate Ubuntu-20.04`
 - `wsl --shutdown`
-- `get-service | ? { $_.displayname -like "*hyper*" -and $_.status -eq "Running" } | restart-service`
 - reboot (sorry)
-
-## WSL2 file operations are slower
-
-Be aware. I usually don't notice.
 
 ## WSL2 uses RAM
 
