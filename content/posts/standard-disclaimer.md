@@ -18,11 +18,11 @@ You're here to be:
 
 - entertained
 - enraged
-- entertainraged and achieve edutainment
+- entertainraged and to achieve edutainment
 
 I don't take myself, my hot takes, or this blog too seriously. Enjoy!
 
-## Spicy Peppers Rating System
+### Spicy Peppers Rating System
 
 {{< rawhtml >}}
 
