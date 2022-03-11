@@ -1,11 +1,18 @@
 +++
-title = "WSL Bible: Everything you could possibly want to know about WSL2"
+title = "Expert WSL: soup-to-nuts"
 tags = []
 date = "2021-02-01"
 draft = false
 +++
 
 ##### Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational
+
+Covered here:
+
+- what WSL is, and how to install it
+- astonishingly useful WSL tips
+- ugly network troubleshooting
+- boring, specialized topics that target 1% of you. 99% of you will experience total boredom, but the remaining 1% will weep for joy
 
 ### What is WSL, and how is it useful?
 
@@ -14,7 +21,7 @@ WSL is the Windows Subsystem for Linux, and I use it to:
 - ssh
 - test and develop shell scripts
 - run curl, base64, openssl, and whatnot
-- run seedy bash one-liners found on the internet
+- run seedy bash one-liners I found on the internet
 - run Windows-incompatible tools - most notably, TUIs like `tig` don't run in Windows
 - configure neovim plugins for 7-20 hours every week (this is a joke, don't hurt me)
 
@@ -22,17 +29,15 @@ WSL2 is also well-isolated, such that I have already installed, deleted, reinsta
 
 ### Installing: WSL2 itself
 
-Installing is as simple as running `wsl --install` if you're lucky; read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
+Installing is as simple as running `wsl --install` as Administrator if you're lucky; read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
 
-You will need to Enable Virtualization in your BIOS if it isn't already enabled. Good luck. Everyone's BIOS is different. These instructions are pretty good? https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap `Del`, `F1`, `F2`, `F8`, `F12` all together, as quickly as possible, and think happy thoughts.
-
-It's important to note that there are older, out-of-date instructions for installing WSL. Don't be fooled! Trust no one! (except me)
+You will need to Enable Virtualization in your BIOS if it isn't already enabled. Good luck. Everyone's BIOS is different. These instructions are pretty good? https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap `Del`, `F1`, `F2`, `F8`, `F12` all together, as quickly as possible, while thinking happy thoughts.
 
 ### Installing: a linux distro
 
-Installing a specific distro happens through the Windows Store. I don't know why, either. Maybe forcing die-hard CLI advocates to install their favorite GPL-licensed distro through the comically, almost ludicrously commercialized Windows Store is a kind of joke? Well, intentional or no, it's hilarious.
+Installing a specific distro happens through the Windows Store. I don't know why, either. Maybe forcing die-hard CLI advocates to install their favorite GPL-licensed distro through the comically commercialized Windows Store is a kind of joke? Well, intentional or no, it's hilarious.
 
-If you don't know which distro to install, pick the most recent version of Ubuntu. And if you think you want to argue with this deliberately simplistic advice, then you are **definitely** not the target audience for it. Go in peace.
+If you don't know which distro to install, **pick the most recent version of Ubuntu.** And if you think you want to argue with this deliberately simplistic advice, then you are **definitely** not the target audience for it. Go in peace.
 
 ### Surprisingly useful things
 
@@ -71,7 +76,7 @@ Windows can access the WSL distro's filesystem, and the WSL distro can access Wi
 - Windows drives are mounted to `/mnt/<driveletter>`.
 - `mount` shows WSL's special mounts:
   ```bash
-  > mount
+  $ mount
   C:\ on /mnt/c type drvfs (rw,noatime,uid=1000,gid=1000,case=off)
   D:\ on /mnt/d type drvfs (rw,noatime,uid=1000,gid=1000,case=off)
   # ... boring parts redacted ...
@@ -96,7 +101,7 @@ wsl --shutdown
 
 # both   --exec   and   (any unrecognized parameter)   run a command in the WSL guest OS
 # and as is becoming a convention in CLIs everywhere, everything after   --   is delegated to the WSL distro
-# --you know, like git does. See https://stackoverflow.com/a/13321491 for a good explanation of -- in git
+#   - you know, like git does. See https://stackoverflow.com/a/13321491 for a good explanation of -- in git
 wsl --exec echo "I'm in unix! PowerShell version: $($PSVersionTable.PSVersion) <--evaluated in PowerShell in Windows"
 wsl ls -al
 wsl -- ls -al
@@ -114,7 +119,11 @@ wsl --exec echo "WSL Distro: `${WSL_DISTRO_NAME}"
 
 ### Seamless Text Editing: VS Code
 
-VS Code (running in Windows) seamlessly edits files in WSL2. To quickly launch the current directory in WSL, do a `code .`.
+VS Code (running in Windows) seamlessly edits files in WSL2. To quickly launch the current directory in WSL, do:
+
+```bash
+$ code .
+```
 
 ### Seamless Terminal Experience: Windows Terminal
 
@@ -148,10 +157,10 @@ My VPN provider seems to interfere with WSL networking, but I'm not certain, and
 
 This is a really boring topic, but if you need it, you need it.
 
-Git for Windows is probably checking out files with CRLF line endings (the specifics are configurable and too boring to fully explain - go read https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings). For most of us, if you commit files in Windows, push to GitHub, and pull them down in WSL, the line endings are LF in WSL and CRLF in Windows, which is probably what you want. However, if you're manipulating/accessing files across Linux and Windows boundaries, consider several solutions:
+Git for Windows is probably checking out files with CRLF line endings (the specifics are configurable and too boring to fully explain - go read https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings). For most of us, if you commit files in Windows, push to GitHub, and pull them down in WSL, the line endings are LF in WSL and CRLF in Windows, which is probably what you want. However, if you're manipulating/accessing files across Linux and Windows boundaries, consider several solutions to tackling the line ending problem:
 
 - `dos2unix` to manually convert a file from LF to CRLF from inside WSL
-- Manually load and change line endings in your text editor. E.g. in VS Code in the status bar, it will indicate either LF or CRLF. You can change this by clicking on the LF (or CRLF) indicator in the status bar. Or change it by running `>Change End of Line Sequence` from the Command Palette.
+- Manually load and change line endings in your text editor. E.g. in VS Code in the status bar, it will indicate either LF or CRLF. You can change this by clicking on the LF (or CRLF) indicator in the status bar, or from the Command Palette: `>Change End of Line Sequence`.
 
 More permanent, team-friendly defaults:
 
