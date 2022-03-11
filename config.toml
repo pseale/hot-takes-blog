@@ -5,7 +5,7 @@ theme = 'm10c'
 
 [params]
   author = 'Peter Seale'
-  description = "This is where I serve up hot takes. They're piping hot, spicy, and fun for all! I'm aware that I'm just a crank with a blog, and I take neither myself nor my hot takes too seriously."
+  description = "Hot takes: spicy, piping hot, and fun for all!"
   avatar = './avatar-dignified-400x400.jpg'
 
 [[params.social]]

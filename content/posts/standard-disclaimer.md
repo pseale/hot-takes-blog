@@ -12,7 +12,7 @@ Welcome! I'm Peter, and I'm here to:
 - have some fun
 - make some jokes
 - sometimes make a serious point
-- but also bury that serious point in a nuclear-grade take
+- but also bury that serious point in a nuclear-grade take 💣
 
 You're here to be:
 
@@ -20,7 +20,7 @@ You're here to be:
 - enraged
 - entertainraged and achieve edutainment
 
-I don't take myself, my hot takes, or this blog too seriously. I'm in essence a crank with a blog, and I'm having fun with this.
+I don't take myself, my hot takes, or this blog too seriously. Enjoy!
 
 ## Spicy Peppers Rating System
 
