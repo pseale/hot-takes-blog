@@ -24,9 +24,41 @@ I don't take myself, my hot takes, or this blog too seriously. Enjoy!
 
 ## Spicy Peppers Rating System
 
-|     |                                                                                                                             |
-| --- | --------------------------------------------------------------------------------------------------------------------------- |
-| 🚫  | Informational, educational, earnest.                                                                                        |
-| 🌶   | A burst of spicy zest. Delicious! May cause mild intestinal discomfort.                                                     |
-| 🌶🌶  | Controversial, unpopular take; may hurt feelings. Spoken in love. The mama bear of hot takes.                               |
-| 🌶🌶🌶 | I'm probably having a lot of fun with this one. Immediately proceed to eyewash station and flush to avoid permanent damage. |
+{{< rawhtml >}}
+
+<style>
+    #spicy-peppers-rating-system-table {
+        font-size: 0.8em;
+        background: #57cc8a;
+        border-collapse:collapse
+    }
+
+    #spicy-peppers-rating-system-table tr {
+    }
+    #spicy-peppers-rating-system-table td {
+        border: 2px solid white;
+        color: white;
+        padding: 0 5px;
+    }
+</style>
+
+<table id="spicy-peppers-rating-system-table">
+<tr>
+  <td>🚫</td>
+  <td>Informational, educational, earnest.</td>
+</tr>
+<tr>
+  <td>🌶</td>
+  <td>A burst of zesty flavor. Delicious and stimulating! May cause mild intestinal discomfort.</td>
+</tr>
+<tr>
+  <td>🌶🌶</td>
+  <td>Controversial, unpopular take; may hurt feelings. Spoken in love. The mama bear of hot takes.</td>
+</tr>
+<tr>
+  <td>🌶🌶🌶</td>
+  <td>I'm probably having a lot of fun with this one. Immediately proceed to eyewash station and flush to avoid permanent damage.</td>
+</tr>
+</table>
+
+{{< /rawhtml >}}

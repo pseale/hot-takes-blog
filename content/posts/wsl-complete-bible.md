@@ -1,8 +1,8 @@
 +++
 title = "WSL Bible: Everything you could possibly want to know about WSL2"
-tags = ["zero-peppers", "blandly-informational"]
+tags = []
 date = "2021-02-01"
-draft = true
+draft = false
 +++
 
 ##### Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational
