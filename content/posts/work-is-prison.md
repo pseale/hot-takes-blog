@@ -1,15 +1,23 @@
 +++
 title = "At Work, It's A Prison Economy"
 tags = []
-date = "2022-02-01"
-draft = false
+date = "2022-02-02"
+draft = true
 +++
 
-Spicy Peppers Rating System: [🌶 | Probably Nonsense]
+##### 🌶 | Probably Nonsense
 
 In prison movies (and I assure you, I've seen ... at least two), we are introduced to the concept of a _prison economy_. Key features of prison economies:
 
 - nobody has money
+- nobody chooses their cellmate
+- everyone is stuck in the prison yard
+- gangs
+
+Compare to work:
+
+- nobody has money
+- nobody chooses their team
 - everyone is stuck in the prison yard
 - gangs
 
@@ -29,4 +37,4 @@ Need the pull request _thoroughly_ reviewed? Huh? Whoa, that's far too much to a
 
 ### The Secret
 
-So here's the secret: butter cake. You buy 3-5 extra squares from the lunch place, bring them back to the office, and give out those squares. Buy influence one delicious crumbly gooey lemony sweet-but-tart square at a time. This kind of influence is why journalists have 'journalistic standards' or whatever. Well, this ain't no newspaper—this is prison!
+So here's the secret: butter cake. You buy 3-5 extra squares from the lunch place, bring them back to the office, and give out those squares. Buy influence one delicious crumbly gooey lemony sweet-but-tart square at a time.
