@@ -12,7 +12,7 @@ Covered here:
 - what WSL is, and how to install it
 - astonishingly useful WSL tips
 - ugly network troubleshooting
-- boring, specialized topics that target 1% of you. 99% of you will experience total boredom, but the remaining 1% will weep for joy
+- boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy
 
 ### What is WSL, and how is it useful?
 
@@ -29,9 +29,9 @@ WSL2 is also well-isolated, such that I have already installed, deleted, reinsta
 
 ### Installing: WSL2 itself
 
-Installing is as simple as running `wsl --install` as Administrator if you're lucky; read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
+Installing is as simple as running (as Administrator) `wsl --install` if you're lucky; read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
 
-You will need to Enable Virtualization in your BIOS if it isn't already enabled. Good luck. Everyone's BIOS is different. These instructions are pretty good? https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap `Del`, `F1`, `F2`, `F8`, `F12` all together, as quickly as possible, while thinking happy thoughts.
+You will need to Enable Virtualization in your BIOS if it isn't already enabled. Good luck. Everyone's BIOS is different. These instructions are pretty good? https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap `Del`, `F1`, `F2`, `F8`, `F9`, `F12` all together, as quickly as possible, while thinking happy thoughts.
 
 ### Installing: a linux distro
 
@@ -54,7 +54,7 @@ cmd.exe /c start https://google.com/search?q=wsl+by+example+cheatsheet
 echo "${WSL_DISTRO_NAME}" | clip.exe
 ```
 
-You can access WSL from PowerShell on Windows, but I haven't found many good uses for it. I guess I could do something like the following?
+You can also pipe Windows stdout to WSL stdin, but I haven't found many good uses for it. I guess I could do something like the following? Anyway, it's possible.
 
 ```powershell
 # base64-encode whatever's on the clipboard, and put that back on the clipboard
@@ -129,14 +129,14 @@ $ code .
 
 I launch the Ubuntu 20.04 shell in a new tab in Windows Terminal with `CTRL` + `SHIFT` + `2`. Windows Terminal is highly configurable, so your hotkeys may vary.
 
-Small nitpick: there are occasional display bugs in Windows Terminal. It's not just you noticing.
+Small nitpick: there are occasional display bugs in Windows Terminal. I've noticed too--it's not just you.
 
 ### WSL: Turning it off and on again
 
 There are two options here: the one you hope works, and the one you know works. WSL's `--shutdown` command is usually effective.
 
-- `wsl --shutdown` followed by `wsl`
-- reboot Windows (sorry)
+- The option you hope works: `wsl --shutdown` followed by `wsl`
+- The option you know works, for certain: reboot Windows (sorry)
 
 ### WSL uses RAM
 
@@ -151,15 +151,15 @@ Listen up! Networking in WSL is magic. And by magic I mean opaque, mysterious, f
 - If DNS dies regularly in WSL, fix it permanently with this WSL-specific change: https://superuser.com/a/1533768
 - Set MTU to 1400 - I would love to explain this further, but in short, I can't. Good luck, and if you google your mysterious networking-related error message and some of the first results are for setting the 'MTU', then try it, certainly.
 
-My VPN provider seems to interfere with WSL networking, but I'm not certain, and it's just a hypothesis at this point.
+My VPN provider seems to interfere with WSL networking, but I'm not certain of anything, and it's just a hypothesis at this point.
 
 ### Boring and Necessary: Line endings
 
 This is a really boring topic, but if you need it, you need it.
 
-Git for Windows is probably checking out files with CRLF line endings (the specifics are configurable and too boring to fully explain - go read https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings). For most of us, if you commit files in Windows, push to GitHub, and pull them down in WSL, the line endings are LF in WSL and CRLF in Windows, which is probably what you want. However, if you're manipulating/accessing files across Linux and Windows boundaries, consider several solutions to tackling the line ending problem:
+Git for Windows is probably checking out files with CRLF line endings (the specifics are here: https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings). For most of us, if you commit files in Windows, push to GitHub, and pull them down in WSL, the line endings are LF in WSL and CRLF in Windows, which is probably what you want. However, if you're manipulating/accessing files across Linux and Windows boundaries, consider several solutions to tackling the line ending problem:
 
-- `dos2unix` to manually convert a file from LF to CRLF from inside WSL
+- `dos2unix` to manually convert a file from LF to CRLF, or CRLF to LF, from inside WSL
 - Manually load and change line endings in your text editor. E.g. in VS Code in the status bar, it will indicate either LF or CRLF. You can change this by clicking on the LF (or CRLF) indicator in the status bar, or from the Command Palette: `>Change End of Line Sequence`.
 
 More permanent, team-friendly defaults:
