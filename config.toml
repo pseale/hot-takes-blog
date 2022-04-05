@@ -1,4 +1,4 @@
-baseURL = 'https://www.devsecfailureops.com/hot-takes/'
+baseURL = 'https://devsecfailureops.com/hot-takes/'
 languageCode = 'en-us'
 title = 'DevSecFailureOps'
 theme = 'm10c'
