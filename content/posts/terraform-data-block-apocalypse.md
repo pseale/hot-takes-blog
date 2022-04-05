@@ -122,7 +122,7 @@ resource "azurerm_storage_account" "example" {
 }
 ```
 
-Before enlightmentment: chop wood, carry water. After enlightenment: chop wood, carry water.
+Before enlightenment: chop wood, carry water. After enlightenment: chop wood, carry water.
 
 #### Political Advocacy and a cry for help
 
