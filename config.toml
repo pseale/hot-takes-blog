@@ -1,11 +1,11 @@
 baseURL = 'https://www.devsecfailureops.com/hot-takes/'
 languageCode = 'en-us'
-title = 'Thought Leadership from Peter'
+title = 'DevSecFailureOps'
 theme = 'm10c'
 
 [params]
   author = 'Peter Seale'
-  description = "Hot takes: spicy, piping hot, and fun for all!"
+  description = "The intersection of Dev, InfoSec, Operations, and mortifying, pervasive Failure"
   avatar = './avatar-dignified-400x400.jpg'
 
 [[params.social]]
