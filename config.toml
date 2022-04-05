@@ -5,7 +5,7 @@ theme = 'm10c'
 
 [params]
   author = 'Peter Seale'
-  description = "The intersection of Dev, InfoSec, Operations, and mortifying, pervasive Failure"
+  description = "DevSecFailureOps: the intersection of Development, InfoSec, Operations, and also mortifying, pervasive Failure"
   avatar = './avatar-dignified-400x400.jpg'
 
 [[params.social]]

@@ -16,10 +16,17 @@
     {{ template "_internal/opengraph.html" . }}
 
     <style>
-      /* it was REALLY hard to style the theme - simplicity wins */
+      /* it was REALLY hard to style the theme - so just overriding specific styles here instead - simplicity wins */
+
+      body {
+        font-size: 16px;
+      }
+
+      h2 {
+        margin-bottom: 0;
+      }
       a h2.post-title {
         text-decoration: underline;
-        margin-bottom: 0;
       }
 
       li.posts-list-item {

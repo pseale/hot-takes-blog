@@ -8,9 +8,7 @@ date = "2022-04-05"
 
 ### Summary: Data Blocks for Dummies
 
-You (yes, **you**) are the dummy if you're using Terraform's `data` blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It's just a matter of time.
-
-Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let's not delete **the entire Kubernetes cluster**, okay?
+Data blocks for dummies may be explained as follows: **you** are the dummy if you're using Terraform's `data` blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It's just a matter of time.
 
 I know the summary above didn't make sense, so read on.
 
@@ -27,9 +25,9 @@ As I've discovered, data blocks are convenient right up until Terraform wants to
 Let's start with something fun and simple. Let's start in the happy land of Not Relying On Data Blocks.
 
 ```hcl
-##
+######################################
 ## Innocent and Pure: Not Relying On Data Blocks
-##
+######################################
 
 # resource group already exists
 
@@ -44,12 +42,12 @@ resource "azurerm_storage_account" "example" {
 
 This works great for a single resource! Great work--you're the best!
 
-So here's what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let's call this scenario Impending Doom. This example is flawed, but **assume** the data block is needed. You can think up a real example. Like all those places you do it in your own terraform!
+So here's what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let's call this scenario Impending Doom. This example is flawed, but **assume** the data block is needed. You can think up a real example. Examples are easy to find--just look anywhere in your own terraform!
 
 ```hcl
-##
+######################################
 ## Impending doom
-##
+######################################
 
 # resource group already exists
 data "azurerm_resource_group" "example" {
@@ -66,16 +64,16 @@ resource "azurerm_storage_account" "example" {
 }
 ```
 
-There's a few things wrong here. First: why did we make a data block in the first place? Why didn't we just reference `var.resource_group_name` and `var.resource_group_location` directly? Look, this is an example. Play along. I don't know, use your imagination.
+There are a few things wrong here. First: again, the data block is unnecessary in the example above, but imagine you did need the data block.
 
-Second: while this works perfectly on the initial `terraform apply`, danger looms! Danger ahead!
+Second: while this works perfectly on the initial `terraform apply`, you are now in danger of replacing that resource at any moment.
 
 Here's what `terraform plan` looks like some time in the future:
 
 ```hcl
-##
+######################################
 ## Your Doom - terraform plan output
-##
+######################################
 
 # resource.azurerm_storage_account.example must be replaced
 -/+ resource "azurerm_storage_account" "example" {
@@ -99,14 +97,19 @@ So let's walk through what happened, to the best of my understanding.
 1. So as a result of you using a data block, which you did for just a little extra convenience, terraform wants to replace **the entire Kubernetes cluster**.
 1. Though I haven't tested it, according to the GitHub Issue at https://github.com/hashicorp/terraform/issues/28377 - terraform is **not** bluffing and will indeed replace all your stuff.
 
+If my frenzied, simplified, incoherent explanation didn't work for you, there are two authoritative answers on the GitHub Issue thread explaining what is truly happening:
+
+- [First explanation](https://github.com/hashicorp/terraform/issues/28377#issuecomment-820398608)
+- [Second explanation](https://github.com/hashicorp/terraform/issues/28377#issuecomment-824070018)
+
 #### Solution
 
 My solution is to stop using data blocks. Here's the fixed example:
 
 ```hcl
-##
+######################################
 ## The Path of Enlightenment: Not Relying On Data Blocks
-##
+######################################
 
 # resource group already exists
 
@@ -130,3 +133,7 @@ I have several things to say:
 1. AM I CRAZY!!?!?!????! HAVE I GONE INSANE!?!???!? AM I ALONE IN THIS STRUGGLE!?!????? I wrote this post as a way of trying to figure out if I'm doing something horribly wrong. Am I? Is there an easier way to resolve this problem? Am I making faulty assumptions? Let me know. I am very experienced in the art of making bad assumptions and as a result, wasting hours of my own time.
 
 Seriously, let me know if I'm doing something wrong.
+
+#### Final note about modules, data blocks, and depends_on
+
+According to the GitHub Issue https://github.com/hashicorp/terraform/issues/28377, this problem is caused by specific interactions between data blocks, modules, and depends_on. I guess? Given how many times I've run into this--something's deeply wrong?
