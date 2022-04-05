@@ -14,11 +14,11 @@ Welcome! I'm Peter, and I'm here to:
 - sometimes make a serious point
 - but also bury that serious point in a nuclear-grade take 💣
 
-You're here to be:
+You're here to:
 
-- entertained
-- enraged
-- entertainraged and to achieve edutainment
+- be entertained
+- be enraged
+- be entertainraged and to achieve edutainment
 
 I don't take myself, my hot takes, or this blog too seriously. Enjoy!
 
