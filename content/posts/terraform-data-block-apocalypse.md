@@ -6,17 +6,17 @@ date = "2022-04-05"
 
 ##### Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation
 
-### Summary: Terraform for Dummies
+### Summary: Data Blocks for Dummies
 
-You (yes, **you**) are the dummy if you're using Terraform's `data` blocks. Every resource that relies on a data block is in danger of being `replaced` because the data block is `read during apply`, and any resource dependent on that data block will be replaced (`forces replacement`).
+You (yes, **you**) are the dummy if you're using Terraform's `data` blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It's just a matter of time.
 
-Sounds apocalyptic, right? Yes, it is. Sure, my infrastructure is resilient! But let's not delete **the entire Kubernetes cluster**, okay?
+Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let's not delete **the entire Kubernetes cluster**, okay?
 
 I know the summary above didn't make sense, so read on.
 
 ### Data blocks explained
 
-Data blocks, or [Data sources](https://www.terraform.io/language/data-sources) in Hashicorp's parlance, are conveniences that allow you to get at information. I'll refer to them as data blocks because in the code they are a `data {}` block. For a better explanation, read the [Hashicorp docs](https://www.terraform.io/language/data-sources)--they're pretty good.
+Data blocks, or [Data sources](https://www.terraform.io/language/data-sources) in Hashicorp's parlance, are conveniences that allow you to get at information. I'll refer to them as data blocks because in the code they are a `data {}` block. Hashicorp docs provide a [a good overview](https://www.terraform.io/language/data-sources).
 
 As I've discovered, data blocks are convenient right up until Terraform wants to replace **the entire Kubernetes cluster**. Did I mention it was **the entire Kubernetes cluster**? Not a node pool, no, **the entire Kubernetes cluster**.
 
@@ -24,7 +24,7 @@ As I've discovered, data blocks are convenient right up until Terraform wants to
 
 [This remarkably friendly GitHub issue](https://github.com/hashicorp/terraform/issues/28377) details the danger better than I can. But I'll try anyway.
 
-So let's start with something fun and simple. Let's start in the happy land of Not Relying On Data Blocks.
+Let's start with something fun and simple. Let's start in the happy land of Not Relying On Data Blocks.
 
 ```hcl
 ##
@@ -44,7 +44,7 @@ resource "azurerm_storage_account" "example" {
 
 This works great for a single resource! Great work--you're the best!
 
-So here's what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let's call this scenario Impending Doom.
+So here's what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let's call this scenario Impending Doom. This example is flawed, but **assume** the data block is needed. You can think up a real example. Like all those places you do it in your own terraform!
 
 ```hcl
 ##
@@ -66,7 +66,7 @@ resource "azurerm_storage_account" "example" {
 }
 ```
 
-There's a few things wrong here. First: why did we make a data block in the first place? Why didn't we just reference `var.resource_group_name` and `var.resource_group_location` directly? Look, this is an example. Play along (**or else**). Assume we need to extract ... data ... from the data block. I don't know, use your imagination.
+There's a few things wrong here. First: why did we make a data block in the first place? Why didn't we just reference `var.resource_group_name` and `var.resource_group_location` directly? Look, this is an example. Play along. I don't know, use your imagination.
 
 Second: while this works perfectly on the initial `terraform apply`, danger looms! Danger ahead!
 
@@ -94,7 +94,7 @@ So let's walk through what happened, to the best of my understanding.
 1. On first apply, when standing up the infrastructure from scratch, there are no problems.
 1. On further applies, assuming nothing else has changed with the resource in question, there are no problems.
 1. But on Doomsday, something in your infrastructure changes. (Honestly, details TBD--I'm still not sure what triggers this.)
-1. On Doomsday, terraform attempts to plan the difference between your HCL and reality. And when it evaluates the `location` property, it cannot evaluate the results of the `data` block, because **data blocks are evaluated during apply**. Let that sink in. Data blocks are not evaluated during plan, but during apply. Not during plan. Not during plan. Am I crazy? Not during plan.
+1. On Doomsday, terraform attempts to plan the difference between your HCL and reality. And when it evaluates the `location` property, it cannot evaluate the results of the `data` block, because **data blocks are evaluated during apply**. Let that sink in. Data blocks are not evaluated during plan, but during apply. Not during plan. Not during plan. Am I crazy? Not during plan, but during apply.
 1. Because it does not know the value of the (honestly truly important) `location` property, it doesn't know if the location's going to change, and makes a plan assuming it will change. So, to use Terraform's terminology, because it relies on a property `known after apply`, this `forces replacement`.
 1. So as a result of you using a data block, which you did for just a little extra convenience, terraform wants to replace **the entire Kubernetes cluster**.
 1. Though I haven't tested it, according to the GitHub Issue at https://github.com/hashicorp/terraform/issues/28377 - terraform is **not** bluffing and will indeed replace all your stuff.
@@ -125,7 +125,7 @@ Before enlightmentment: chop wood, carry water. After enlightenment: chop wood, 
 
 I have several things to say:
 
-1. Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are **productivity landmines**.
+1. Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are _productivity landmines_.
 1. Hashicorp: seriously, this is a nightmare. `terraform validate` should warn me for every single data block I use. Sure, some data blocks can be used safely, as can some sticks of dynamite. But let's put some guardrails on these things, okay?
 1. AM I CRAZY!!?!?!????! HAVE I GONE INSANE!?!???!? AM I ALONE IN THIS STRUGGLE!?!????? I wrote this post as a way of trying to figure out if I'm doing something horribly wrong. Am I? Is there an easier way to resolve this problem? Am I making faulty assumptions? Let me know. I am very experienced in the art of making bad assumptions and as a result, wasting hours of my own time.
 
