@@ -10,11 +10,11 @@ draft = false
 Covered here:
 
 - what WSL is, and how to install it
-- astonishingly useful WSL tips
+- **astonishingly useful WSL tips!**
 - ugly network troubleshooting
 - boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy
 
-### What is WSL, and how is it useful?
+### Introduction: What is WSL, and how is it useful?
 
 WSL is the Windows Subsystem for Linux, and I use it to:
 
@@ -25,13 +25,17 @@ WSL is the Windows Subsystem for Linux, and I use it to:
 - run Windows-incompatible tools - most notably, TUIs like `tig` don't run in Windows
 - configure neovim plugins for 7-20 hours every week (this is a joke, don't hurt me)
 
-WSL2 is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros without issue. In other words, it doesn't do spooky things to your host like 👻👻👻cygwin👻👻👻 did all those years ago. Spoken in love, cygwin.
+All of these things can be done without WSL, but it's **less effort** to go with the flow and say, run ssh as nature intended. As a good, real example, every complex `kubectl` script I've seen was written in bash. You can convert those scripts to PowerShell, or you can somehow run bash directly on Windows...but why? **It's easier in WSL**.
 
-### Installing: WSL2 itself
+WSL is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros without issue. In other words, WSL doesn't do spooky things to your host like 👻👻👻cygwin👻👻👻 does. Spoken in love, cygwin.
 
-Installing is as simple as running (as Administrator) `wsl --install` if you're lucky; read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
+### Installing: WSL itself
+
+As of 2022, installing WSL2 is as simple as running (as Administrator) `wsl --install` if you're lucky. Read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
 
 You will need to Enable Virtualization in your BIOS if it isn't already enabled. Good luck. Everyone's BIOS is different. These instructions are pretty good? https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap `Del`, `F1`, `F2`, `F8`, `F9`, `F12` all together, as quickly as possible, while thinking happy thoughts.
+
+Beware of older, outdated instructions for installing WSL1 and even WSL2. And in full disclosure, I'm writing this sentence in April 2022, and I'm sure my instructions will similarly fall out of date. In the future you'll spend 45 minutes begging your Windows Store Personal GAN Shopping Assistant to install WSL, and it won't, of course. Anyway good luck in the future.
 
 ### Installing: a linux distro
 
@@ -41,20 +45,22 @@ If you don't know which distro to install, **pick the most recent version of Ubu
 
 ### Surprisingly useful things
 
-WSL can launch Windows programs and use them in pipelines. There are some great things you can do with this _synergy_.
+WSL can launch Windows programs and use them in pipelines. There are some great things you can do with this _synergy_:
 
 ```bash
-# launch Windows Explorer here
+# launch Windows Explorer here - three ways
 cmd.exe /c start .
+explorer.exe
+powershell.exe -Command ii .
 
 # works on links too
-cmd.exe /c start https://google.com/search?q=wsl+by+example+cheatsheet
+cmd.exe /c start https://google.com/search?q=expert+wsl+devsecfailureops
 
 # pipe directly to the Windows clipboard
-echo "${WSL_DISTRO_NAME}" | clip.exe
+echo "hunter2" | base64 | clip.exe
 ```
 
-You can also pipe Windows stdout to WSL stdin, but I haven't found many good uses for it. I guess I could do something like the following? Anyway, it's possible.
+You can also run WSL processes in your PowerShell pipeline, but I haven't found many good uses for it. I guess I could do something like the following? Anyway, it's possible.
 
 ```powershell
 # base64-encode whatever's on the clipboard, and put that back on the clipboard
@@ -67,41 +73,43 @@ Windows can access the WSL distro's filesystem, and the WSL distro can access Wi
 
 **From Windows:**
 
-- `\\wsl$\Ubuntu-20.04\home\p\.bashrc` - The full path is formed as such: `\\wsl$\Ubuntu-20.04` is the root of the Ubuntu 20.04 filesystem, and `/home/p/.bashrc` is the path within that filesystem
-- Typing `\\wsl$` into the Explorer address bar shows all distros and lets you lazily navigate with the mouse and other GUI affordances (BUT I WOULD NEVER!)
+- Files in WSL are accessible. By example, the full path for `\\wsl$\Ubuntu-20.04\home\p\.bashrc` is formed as such:
+  - `\\wsl$\Ubuntu-20.04` accesses the root of the Ubuntu 20.04 filesystem
+  - `/home/p/.bashrc` is the path within that filesystem
+  - thus `\\wsl$\Ubuntu-20.04` + `/home/p/.bashrc` -> `\\wsl$\Ubuntu-20.04\home\p\.bashrc`
 - `cd \\wsl$\Ubuntu-20.04` works in PowerShell, and even cmd.exe has limited support for UNC-style paths
+- Accessing `\\wsl$` from the Explorer address bar lets you lazily navigate around WSL with the mouse and other GUI affordances--\*audible gasp\* BUT I WOULD NEVER! I haven't touched my mouse since 2018, I swear! And that was an accident!
 
 **From WSL:**
 
-- Windows drives are mounted to `/mnt/<driveletter>`.
-- `mount` shows WSL's special mounts:
-  ```bash
-  $ mount
-  C:\ on /mnt/c type drvfs (rw,noatime,uid=1000,gid=1000,case=off)
-  D:\ on /mnt/d type drvfs (rw,noatime,uid=1000,gid=1000,case=off)
-  # ... boring parts redacted ...
-  ```
-- To reference Windows files and paths, do something like e.g. `ls -al /mnt/c/Users/p/Desktop`. The full path is formed as such: `/mnt/c` gets you to the C:, and `\Users\p\Desktop` is the path within the C: drive.
-- Windows paths referenced from WSL are case-sensitive.
+- Files in Windows are accessible. By example, the full path for `/mnt/c/Users/p/Desktop/passwords.txt` is formed as such:
+  - `/mnt/c` accesses the root of the C: (all Windows drives are mounted to `/mnt/<driveletter>`)
+  - `\Users\p\Desktop\passwords.txt` is the path from within C:
+  - thus `/mnt/c` + `\Users\p\Desktop\passwords.txt` -> `/mnt/c/Users/p/Desktop/passwords.txt`
+- Windows paths referenced from WSL are **case-sensitive**. This is easier to remember once you've been burned by it 3-4 times (or 300-400 maybe).
 
 ### wsl.exe usage
 
-`wsl.exe` is of specific, limited utility. Here are the specific things I've done with `wsl.exe`:
+Here are the specific things I've done with `wsl.exe`:
 
 ```powershell
-# start default distro and launch shell - also kicks the WSL subsystem into gear if WSL's not running, for whatever reason
+# start default distro and launch shell
+# also kicks the WSL subsystem into gear if WSL's not running, for whatever reason
 wsl
 
-# list - useful if you installed both 'ubuntu' and 'ubuntu-20.04' - whoops
-# anyway, I should also point out that you can simultaneously install multiple distros
+# list - useful if you're playing around with multiple distros, or don't know what you're doing
+# I should point out that you can simultaneously install multiple distros
 wsl --list
 
 # shutdown
 wsl --shutdown
+```
 
-# both   --exec   and   (any unrecognized parameter)   run a command in the WSL guest OS
-# and as is becoming a convention in CLIs everywhere, everything after   --   is delegated to the WSL distro
-#   - you know, like git does. See https://stackoverflow.com/a/13321491 for a good explanation of -- in git
+You can quickly invoke the WSL shell via wsl.exe. The details are explained by example below:
+
+```powershell
+# both   --exec   and   (any unrecognized parameter)   run a command in the WSL distro
+# everything after   --   is delegated to the WSL distro
 wsl --exec echo "I'm in unix! PowerShell version: $($PSVersionTable.PSVersion) <--evaluated in PowerShell in Windows"
 wsl ls -al
 wsl -- ls -al
@@ -119,7 +127,9 @@ wsl --exec echo "WSL Distro: `${WSL_DISTRO_NAME}"
 
 ### Seamless Text Editing: VS Code
 
-VS Code (running in Windows) seamlessly edits files in WSL2. To quickly launch the current directory in WSL, do:
+VS Code (running in Windows) seamlessly edits files in WSL2, so long as you've installed either of the `Remote - WSL` or `Remote Development` extensions.
+
+To painlessly launch the current directory in WSL, do:
 
 ```bash
 $ code .
@@ -140,7 +150,7 @@ There are two options here: the one you hope works, and the one you know works. 
 
 ### WSL uses RAM
 
-- If you're running WSL on a Windows OS with only 16GB of RAM, consider upgrading to 32GB. With 16GB, you're likely using all your RAM and relying on swap. This will slow you down noticeably.
+- If you're running WSL on a Windows OS with only 16GB of RAM, consider upgrading to 32GB. With 16GB, you're likely using all your RAM and relying on swap. This will slow you down noticeably. I mean, yes, we mostly blame Chrome and curse the day Electron was invented, and they're the worst offenders. I'm just saying that once you start running containers or VMs on 16GB of RAM, you're done. You're done.
 - WSL2 appears as `Vmmem` in Task Manager. Ubuntu 20.04 on my machine is currently using just under 2GB of RAM.
 - To check available RAM, look at Performance->Memory in Task Manager.
 
@@ -149,9 +159,7 @@ There are two options here: the one you hope works, and the one you know works. 
 Listen up! Networking in WSL is magic. And by magic I mean opaque, mysterious, fickle, and moody. I've done several things to fix networking issues:
 
 - If DNS dies regularly in WSL, fix it permanently with this WSL-specific change: https://superuser.com/a/1533768
-- Set MTU to 1400 - I would love to explain this further, but in short, I can't. Good luck, and if you google your mysterious networking-related error message and some of the first results are for setting the 'MTU', then try it, certainly.
-
-My VPN provider seems to interfere with WSL networking, but I'm not certain of anything, and it's just a hypothesis at this point.
+- Set MTU to 1400 - I would love to explain this further, but in short, I can't. Good luck, and if you google your mysterious networking-related error message and some of the first results are for setting the 'MTU', then try it, certainly. The last time I saw this error, someone was trying to clone a git repo.
 
 ### Boring and Necessary: Line endings
 
@@ -167,7 +175,7 @@ More permanent, team-friendly defaults:
 - set `.gitattributes` in individual repos to always checkout some file types (e.g. shell scripts) as LF
 - set `.gitattributes` in specific repos to always checkout all files as LF
 
-More permanent defaults for your git install only:
+More permanent defaults for your git install (only affects you, not the team):
 
 - via `git config --global core.autocrlf`
 - via `git config --global core.eol`

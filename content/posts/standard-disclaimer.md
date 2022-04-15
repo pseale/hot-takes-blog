@@ -16,11 +16,12 @@ Welcome! I'm Peter, and I'm here to:
 
 You're here to:
 
+- learn something
 - be entertained
 - be enraged
-- be entertainraged and to achieve edutainment
+- taste a Neopolitan ice-cream flavor-esque sample of all three. Let's call this edutainragement.
 
-I don't take myself, my hot takes, or this blog too seriously. Enjoy!
+I don't take myself, these hot takes, or this blog too seriously. Enjoy!
 
 ### Spicy Peppers Rating System
 
@@ -53,7 +54,7 @@ I don't take myself, my hot takes, or this blog too seriously. Enjoy!
 </tr>
 <tr>
   <td>🌶🌶</td>
-  <td>Controversial, unpopular take; may hurt feelings. Spoken in love. The mama bear of hot takes.</td>
+  <td>Controversial, unpopular take; may hurt feelings. Spoken in love. The Goldilocksian mama bear of hot takes.</td>
 </tr>
 <tr>
   <td>🌶🌶🌶</td>
