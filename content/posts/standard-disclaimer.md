@@ -19,7 +19,7 @@ You're here to:
 - learn something
 - be entertained
 - be enraged
-- taste a Neopolitan ice-cream flavor-esque sample of all three. Let's call this edutainragement.
+- sample a Neopolitan-esque combination of all three flavors. Let's call this edu-tain-ragement. Edutainragement. Flows off the tongue.
 
 I don't take myself, these hot takes, or this blog too seriously. Enjoy!
 
@@ -29,7 +29,7 @@ I don't take myself, these hot takes, or this blog too seriously. Enjoy!
 
 <style>
     #spicy-peppers-rating-system-table {
-        font-size: 0.8em;
+        font-size: 0.85em;
         background: #57cc8a;
         border-collapse:collapse
     }
@@ -41,6 +41,10 @@ I don't take myself, these hot takes, or this blog too seriously. Enjoy!
         color: white;
         padding: 0 5px;
     }
+    #spicy-peppers-rating-system-table td.peppers {
+        white-space: nowrap; /* we can afford the horizontal space to force all the peppers into a single line */
+    }
+
 </style>
 
 <table id="spicy-peppers-rating-system-table">
@@ -49,15 +53,15 @@ I don't take myself, these hot takes, or this blog too seriously. Enjoy!
   <td>Informational, educational, earnest.</td>
 </tr>
 <tr>
-  <td>🌶</td>
+  <td class="peppers">🌶</td>
   <td>A burst of zesty flavor. Delicious and stimulating! May cause mild intestinal discomfort.</td>
 </tr>
 <tr>
-  <td>🌶🌶</td>
+  <td class="peppers">🌶🌶</td>
   <td>Controversial, unpopular take; may hurt feelings. Spoken in love. The Goldilocksian mama bear of hot takes.</td>
 </tr>
 <tr>
-  <td>🌶🌶🌶</td>
+  <td class="peppers">🌶🌶🌶</td>
   <td>I'm probably having a lot of fun with this one. Immediately proceed to eyewash station and flush to avoid permanent damage.</td>
 </tr>
 </table>

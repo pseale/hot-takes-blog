@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="{{ .Site.LanguageCode | default "en-us" }}">
   <head>
-    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} // {{ .Site.Title }}{{ end }}</title>
-    <link rel="shortcut icon" href="{{ .Site.Params.favicon | default "/favicon.ico" }}" />
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
+    <!-- <link rel="shortcut icon" href="{{ .Site.Params.favicon | default "/favicon.ico" }}" /> -->
     <meta charset="utf-8" />
     {{ hugo.Generator }}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,8 +18,32 @@
     <style>
       /* it was REALLY hard to style the theme - so just overriding specific styles here instead - simplicity wins */
 
+      header.app-header {
+        padding: 3em;
+        margin: -1.5em;
+        yes-this-was-on-purpose: 1; /* for fun! */
+      }
+
+      /* very basic media query to kill the huge margin for mobile devices */
+      @media (max-width:940px)  {
+        main.app-container {
+          padding: 2px;
+          margin: 2px;
+        }
+        header.app-header {
+          padding: 0;
+          margin: 0;
+          yes-this-was-on-purpose: 1; /* for fun! */
+        }
+      }
+
       body {
         font-size: 16px;
+        color: #d6e3ef;
+      }
+
+      body strong {
+        color: #fff;
       }
 
       h2 {
@@ -38,6 +62,15 @@
         margin: 5px 0;
         padding-left: 5px;
         background: #57cc8a;
+      }
+      code {
+        color: rgb(206 217 227); /* I wanted more contrast in the code blocks. I don't like this low-contrast stuff in the theme */
+        background-color: #4b525c; /* for inline code blocks, we need the background to be a bit different */
+        padding: 2px;
+      }
+      div.highlight code {
+        background-color: inherit; /* don't affect background colors in the big code blocks */
+        padding: 0;
       }
     </style>
   </head>
