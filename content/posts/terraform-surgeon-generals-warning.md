@@ -129,11 +129,12 @@ So let's walk through what happened, to the best of my understanding.
 Let me attempt to explain this in a different way:
 
 1. There is a gun on the mantle.
+1. Time passes.
 1. We pick up the gun.
 1. A great deal of time passes. Adventures!
-1. And through an unlikely series of events, we load the gun and point it at our foot.
-1. More adventures!
-1. Sometime later, while tagging our infrastructure in terraform, the gun discharges. Friend, we've just shot ourselves in the foot. I can't believe it either, but here we are.
+1. Through an unlikely series of events, we load the gun and point it at our foot.
+1. More adventures! More time passes!
+1. Sometime later, while tagging infrastructure in terraform, the gun discharges. Friend, we've just shot ourselves in the foot. I can't believe it either, but here we are.
 
 In this colorful allegory, data blocks are the gun, and the unlikely series of events were in my case, quite common. And my point here is, while we see data blocks as harmless conveniences, we should treat them instead as a potentially loaded gun, one which may fire at any moment.
 
