@@ -1,10 +1,18 @@
 +++
-title = "Terraform Data Blocks: Lurking Danger"
+title = "Terraform Data Blocks: Surgeon General's Warning"
 tags = []
-date = "2022-04-14"
+date = "2022-04-24"
 +++
 
-##### Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation
+##### Spicy Peppers Rating System | 🌶 - One Pepper | Bold and Zesty; Potentially Misinformation
+
+{{< rawhtml >}}
+
+<div style="border: solid black 4px; max-width: 850px; padding: 10px 15px; background: white; color: black; font-size: 1.5em; line-height: 1.2em; text-align: center; margin-top: 25px">
+SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif; font-weight: bold; font-style: italic">DATA BLOCKS</span> Now Greatly Reduces Serious Risks to Your <span style="color: #111; font-family: serif; font-weight: bold; font-style: italic">TERRAFORM INFRASTRUCTURE</span>.
+</div>
+
+{{< /rawhtml >}}
 
 ### Summary: Data Blocks
 
@@ -22,11 +30,11 @@ As I've discovered, data blocks are convenient right up until Terraform wants to
 
 [This remarkably friendly GitHub issue](https://github.com/hashicorp/terraform/issues/28377) details the danger better than I can. But I'll try anyway.
 
-Let's start with something fun and simple: living in the happy land of Primal Innocence. The Beginning.
+Let's start with The Beginning.
 
 ```hcl
 ######################################
-## Primal Innocence: Not Relying On Data Blocks
+## The Beginning: No Data Blocks
 ######################################
 
 # subnet already exists, not managed by terraform
@@ -41,11 +49,11 @@ resource "azurerm_network_interface" "example" {
 
 This works great! To specify which subnet to place the `azurerm_network_interface` in, we've hardcoded the `subnet_id`. This works, it's safe, and any potential mistakes can be discovered during a `terraform plan` ... but it's ugly? It's hard to read?
 
-So here's what we did next. So convenient! Let's call this scenario Trouble Ahead: Storm's A-brewin'.
+So here's what we did next, for a little bit of convenience. Let's call this scenario Trouble Ahead: Storm's A-brewin'.
 
 ```hcl
 ######################################
-## Trouble Ahead: Storm's A-brewin'
+## Trouble Ahead: Data Block Introduced For Convenience
 ######################################
 
 # subnet already exists - thus we reference it as a 'data' block
@@ -65,7 +73,7 @@ resource "azurerm_network_interface" "example" {
 
 While this works perfectly on the initial `terraform apply`, we are now in danger of replacing our `azurerm_network_interface` resource.
 
-The danger is not immediate--so far, we're still safe. To fall fully into the trap, we need to do a few specific, reasonable-seeming things:
+The danger is not immediate--so far, we're still safe. To fall fully into the trap, we need to do a few specific things:
 
 - Use a data block in a module
 - Use outputs from that module
@@ -75,7 +83,7 @@ Let's see what such a disaster looks like:
 
 ```hcl
 ######################################
-## Imminent doom
+## Imminent Doom: Data Block + Module + depends_on
 ######################################
 
 # assume this module relies on the same data block, under the hood
@@ -94,9 +102,7 @@ resource "azurerm_network_interface" "example" {
 Harmless, right? Let's look at what `terraform plan` tells us now:
 
 ```hcl
-######################################
-## Your Doom - terraform plan output
-######################################
+# (the following is a partial `terraform plan` output)
 
 # resource.azurerm_network_interface.example must be replaced
 -/+ resource "azurerm_network_interface" "example" {
@@ -123,9 +129,9 @@ So let's walk through what happened, to the best of my understanding.
 Let me attempt to explain this in a different way:
 
 1. There is a gun on the mantle.
-1. We pick up the gun. While it's not loaded (at least the last time we checked), it is at this point we should treat it as loaded.
-1. A great deal of time passes. What adventures we've had! What sights we've seen! Oh, if only I had time to tell the tale!
-1. And through an unlikely series of events, we load the gun and point it at our foot. Ominous foreboding.
+1. We pick up the gun.
+1. A great deal of time passes. Adventures!
+1. And through an unlikely series of events, we load the gun and point it at our foot.
 1. More adventures!
 1. Sometime later, while tagging our infrastructure in terraform, the gun discharges. Friend, we've just shot ourselves in the foot. I can't believe it either, but here we are.
 
@@ -140,7 +146,7 @@ If my explanation didn't work for you, there are two succinct, authoritative ans
 
 #### Solution
 
-My solution is to stop using data blocks. Here's the fixed example:
+One solution is to stop using data blocks. Here's the fixed example:
 
 ```hcl
 ######################################
@@ -163,10 +169,13 @@ And while I've hardcoded the `subnet_id` in the enlightened example above, I wou
 
 #### Alternate Solutions
 
-- Import the resource into terraform, so we can replace the data block with a `resource`. Pinocchio is a real boy now! Pinocchio is a real boy who is managed by Terraform, with all that entails.
-- As the GitHub Issue mentioned, avoid `depends_on`, especially if we don't need it.
-- "Hello, Pulumi Incorporated? Yes? I hear you like both **customers** and **money**? Yes? That's great! I'll be over immediately!"
-- Move into the mountains, live off of the land, make your own clothing. Don't worry about medical care, just rub some leaves on whatever's ailing you and breathe in that fresh mountain air. Use your old work laptop as part of the shelter--a constant reminder of the old world and why you left it behind. If you're honest, it's miserable in the wild, but at least you don't have to deal with Terraform. That's what you tell yourself as you rub more leaves on the rash. The rash is still growing, and it's more of a burning sensation now than an itch. It's cold. Cold in the mountains.
+- Import the resource into terraform, so we can replace the data block with a `resource`. Pinocchio is a real boy now! Pinocchio is a real boy who is managed by Terraform, with all that entails. This is probably the best solution, so long as you're able to enact it.
+- As the GitHub Issue mentioned, avoid `depends_on`, especially if you don't need it.
+
+#### More Alternate "Solutions"
+
+- "Hello, Pulumi Incorporated? Yes? I hear you like both **customers** and **money**? Yes? That's great! I'll be right over!"
+- Move into the mountains, live off of the land, make your own clothing. Don't worry about medical care, just rub some leaves on whatever's ailing you and breathe in that fresh mountain air. Invigorating! Use your old work laptop as part of the shelter--a constant reminder of the old world and why you left it behind. If you're honest, it's miserable in the wild, but at least you don't have to deal with Terraform. That's what you tell yourself as you rub more leaves on the rash. The rash is still growing, and it's more of a burning sensation now than an itch. It's cold. Cold in the mountains.
 
 #### Political Advocacy and a cry for help
 

@@ -5,7 +5,7 @@ date = "2022-03-18"
 draft = false
 +++
 
-##### Spicy Peppers Rating System | 🚫 | Zero Peppers: Inoffensive and Sincere
+##### Spicy Peppers Rating System | 🚫 - Zero Peppers | Inoffensive and Sincere
 
 ### Summary
 

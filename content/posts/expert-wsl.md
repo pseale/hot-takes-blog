@@ -5,7 +5,7 @@ date = "2022-04-01"
 draft = false
 +++
 
-##### Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational
+##### Spicy Peppers Rating System | 🚫 - Zero Peppers | Mild and Nutritious; Blandly Educational
 
 Covered here:
 
