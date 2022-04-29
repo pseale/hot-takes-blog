@@ -152,14 +152,17 @@ Let me attempt to explain this in a different way:
 
 1. SCENE: Cozy study. A leather chair sits next to the fireplace. Camera pans to the fireplace. A gun sits on the mantle. End Scene.
 1. Time passes.
-1. SCENE: Enters cozy study with a coworker. Loud and angry argument about whether 'gitops is worth it'. Stands by the fireplace. Picks up the gun, toggles the safety off, uses this as a metaphor for the relative safety of the additional gates/checks. Puts the gun back. End Scene.
+1. SCENE: Two nerds enter. Loud and angry argument about whether 'gitops is worth it'. One stands by the fireplace. Picks up the gun, toggles the safety off, uses this as a metaphor for the relative safety of the additional gates/checks. Puts the gun back. End Scene.
 1. A great deal of time passes. Adventures!
 1. More adventures! More time passes!
-1. SCENE: "...and so terraform apply works like this gun. Running `terraform apply` cocks the gun" ... (proceeds to cock the gun) ... but nothing happens until you pull the trigger! See? It's totally safe." (puts the gun back on the mantle) "No worries, the gun's not loaded." (walks away) Camera pans to gun, lingers on it for a few seconds. End Scene.
-1. (much later) SCENE: Wildly gesticulating "looK aT Me, i'M A FreeBSD AdMINiSTraTor!" Picks up the gun, continues flailing wildly. "I uSE pOrts aND jailS" Gesticulates even more furiously. "AnD ALSo OBsCUre FIleSYStEms!" Impassioned gesticulation crescendoes with a complete loss of control. Drops gun, which hits the floor. Gun fires.
-1. Friend, we've just shot ourselves in the foot. I can't believe it either, but here we are.
+1. SCENE: "...and so terraform apply works like this gun. Running `terraform apply` cocks the gun" ... (proceeds to cock the gun) ... but nothing happens until you pull the trigger! See? It's totally safe." (puts the gun back on the mantle) "No worries, the gun's not loaded, and what's more, the safety is on!" (walks away) Camera pans to gun, lingers on it for a few seconds. End Scene.
+1. (much later) SCENE: Wildly gesticulating "looK aT Me, i uSE FreeBSD!" Picks up the gun, continues flailing wildly. "POrts aND jailS!" Gesticulates even more furiously. "cHeCK OUt TheSE OBsCUre FIleSYStEms!" Impassioned gesticulation crescendoes. Drops gun, which hits the floor. Gun fires.
 
-In this colorful allegory, data blocks are the gun. And my point here is, while we see data blocks as harmless conveniences, we should treat them instead as a potentially loaded gun, which may fire at any moment.
+Friend, we've just shot ourselves in the foot. I can't believe it either, but here we are.
+
+In this colorful allegory, data blocks are the gun. Everyone thinks it's harmless. And perhaps there's no real danger at first. But by the end of this (quite thrilling) movie, we've shot ourselves. In my situation, I 'shot myself' multiple times and hit roughly 40-70% of my body! And my point here is, while we see data blocks as harmless tools, we should treat them as _deadly weapons_.
+
+#### Alternate Explanations
 
 There are two succinct, authoritative answers on the GitHub Issue thread explaining what's happening, though to their detriment they do _not_ fire any guns or reference a three-act structure in their explanations:
 
@@ -168,7 +171,7 @@ There are two succinct, authoritative answers on the GitHub Issue thread explain
 
 #### Solution
 
-One solution is to stop using data blocks. Here's the fixed example:
+One solution is to stop using data blocks. Here's the example, 'fixed':
 
 ```hcl
 ######################################
@@ -191,13 +194,13 @@ And while I've hardcoded the `subnet_id` in the enlightened example above, I wou
 
 #### Alternate Solutions
 
-- Import the resource into terraform, so you can replace the data block with a `resource`. Pinocchio is a real boy now! Pinocchio is a real boy who is managed by Terraform, with all that entails. This is probably the best solution, so long as you're able to enact it.
+- Import the resource into terraform, so you can replace the data block with a `resource`. Pinocchio is a real boy now! A real boy who is managed by Terraform--with all that entails. This is probably the best solution, so long as you're able to make it happen.
 - As the GitHub Issue mentions, avoid `depends_on`, especially if you don't need it.
 
 #### More Alternate "Solutions"
 
 - "Hello, Pulumi Incorporated? Yes? I hear you like both **customers** and **money**? Yes? That's great! I'll be right over!"
-- Move into the mountains, live off of the land, make your own clothing. Don't worry about medical care, just crush up leaves and rub them on whatever's ailing you, and breathe in that fresh mountain air. Invigorating! Use your old work laptop as part of the shelter--a constant reminder of the old world and why you left it behind. If you're honest, it's miserable in the wild, but at least you don't have to deal with Terraform. That's what you tell yourself as you rub more crushed leaves on the rash. The rash is still growing, and it's starting to burn now more than itch. It's cold. Cold in the mountains.
+- Move into the mountains, live off of the land, make your own clothes. Don't worry about medical care, just crush up leaves and rub them on whatever's ailing you, and breathe in that fresh mountain air. Invigorating! Use your old work laptop as part of the shelter--a constant reminder of the old world and why you left it behind. If you're honest, it's miserable in the wild, but at least you don't have to deal with Terraform. That's what you tell yourself as you rub more crushed leaves on the rash. The rash is still growing, and it's starting to burn now more than itch. It's cold. Cold in the mountains.
 
 #### Political Advocacy and a cry for help
 
