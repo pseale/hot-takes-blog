@@ -56,7 +56,9 @@ resource "azurerm_network_interface" "example" {
 }
 ```
 
-This works great! To specify which subnet to place the `azurerm_network_interface` in, we've hardcoded the `subnet_id`. This works, it's safe, and any potential mistakes can be discovered during a `terraform plan` ... but it's ugly? It's hard to read?
+This creates a network interface that is placed on `subnet1`.
+
+And it works great! To specify which subnet to place the `azurerm_network_interface` in, we've hardcoded the `subnet_id`. This works, it's safe, and any potential mistakes can be discovered during a `terraform plan`. As for downsides: this giant ugly ID is ugly? And hard to read?
 
 So here's what we did next, for a little bit of convenience. Let's call this scenario Trouble Ahead: Storm's A-brewin'.
 
@@ -82,6 +84,8 @@ resource "azurerm_network_interface" "example" {
 }
 ```
 
+The network interface is still placed on `subnet1`, but we've avoided using the full, ugly ID for `subnet1`, and instead use variables (which we presumably use elsewhere anyways).
+
 While this works perfectly on the initial `terraform apply`, we are now in potential future danger of replacing our `azurerm_network_interface` resource.
 
 The danger is not immediate--so far, we're still safe. To fall fully into the trap, we need to do a few specific things:
@@ -90,7 +94,7 @@ The danger is not immediate--so far, we're still safe. To fall fully into the tr
 - Use outputs from that module
 - Explicitly `depends_on` that module
 
-And let me be clear that because none of us knew, we built our terraform in such a way that **the majority of our infrastructure** was affected by such an issue. It's not that difficult to do. Use data blocks freely and introduce modules as your terraform grows. In just a short time, you'll be in trouble, just like me!
+And let me be clear that because no one on my team knew to avoid this, we built the terraform in such a way that **the majority of our infrastructure** was affected by such an issue. It's not that difficult to do. Use data blocks freely and introduce modules as your terraform grows. In just a short time, you'll be in trouble, just like me!
 
 Let's see what such a disaster looks like:
 
@@ -120,20 +124,20 @@ resource "azurerm_network_interface" "example" {
 }
 ```
 
-Harmless, right? Let's look at what `terraform plan` tells us now:
+We have introduced a `vnet` module, which outputs the long, ugly subnet ID in a convenient and encapsulated way. Harmless, right? Let's look at what `terraform plan` tells us now:
 
 ```hcl
 # (the following is a partial `terraform plan` output)
 
 # resource.azurerm_network_interface.example must be replaced
 -/+ resource "azurerm_network_interface" "example" {
-  subnet_id           = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/examplerg/providers/Microsoft.Network/virtualNetworks/examplevnet/subnets/subnet1" -> (known after apply) # forces replacement
+  subnet_id           = "...(omitted for space)..." -> (known after apply) # forces replacement
 
   # ... (omitted)
 }
 ```
 
-Congratulations, we're about to **replace all our infrastructure**!
+The key phrase here, which has burned itself into my retinas and haunts me at night, is `-> (known after apply) # forces replacement`. And congratulations, we're about to **replace all our infrastructure**!
 
 #### Explanation
 
@@ -142,7 +146,7 @@ So let's walk through what happened, to the best of my understanding.
 1. We have resources in terraform.
 1. Those resources rely directly or indirectly on data blocks.
 1. The data blocks are in a module, and we explicitly `depends_on` that module.
-1. Presumably (speculating), terraform can't know the value of the output of the module until during apply of the module, and because of this, it doesn't know if values will change.
+1. Presumably (speculating), terraform can't know the value of the output of the module until later than usual--**during apply of the module**--and because of this, it doesn't know if values will change.
 1. Therefore, it chooses the only predictable choice, and assumes that yes, the value will change.
 1. And if this forces replacement of an entire resource, well, so be it.
 1. Anyway a big chunk of our infrastructure is now cursed by the dreaded `-> (known after apply) # forces replacement` message.
@@ -156,7 +160,7 @@ Let me attempt to explain this in a different way:
 1. A great deal of time passes. Adventures!
 1. More adventures! More time passes!
 1. SCENE: "...and so terraform apply works like this gun. Running `terraform apply` cocks the gun" ... (proceeds to cock the gun) ... but nothing happens until you pull the trigger! See? It's totally safe." (puts the gun back on the mantle) "No worries, the gun's not loaded, and what's more, the safety is on!" (walks away) Camera pans to gun, lingers on it for a few seconds. End Scene.
-1. (much later) SCENE: Wildly gesticulating "looK aT Me, i uSE FreeBSD!" Picks up the gun, continues flailing wildly. "POrts aND jailS!" Gesticulates even more furiously. "cHeCK OUt TheSE OBsCUre FIleSYStEms!" Impassioned gesticulation crescendoes. Drops gun, which hits the floor. Gun fires.
+1. (much later) SCENE: Wildly gesticulating "looK aT Me, i'M FreeBSD!" Picks up the gun, continues flailing wildly. "POrts aND jailS!" Gesticulates even more furiously. "cHeCK OUt TheSE OBsCUre FIleSYStEms!" Impassioned gesticulation crescendoes. Drops gun, which hits the floor. Gun fires.
 
 Friend, we've just shot ourselves in the foot. I can't believe it either, but here we are.
 
@@ -190,14 +194,18 @@ resource "azurerm_network_interface" "example" {
 
 Before enlightenment: chop wood, carry water. After enlightenment: chop wood, carry water.
 
-And while I've hardcoded the `subnet_id` in the enlightened example above, I would (and certainly have) extracted out either a `local` variable or a module-level `var`. There's certainly a guiding principle as to when to extract variables, but ... (handwaving) go read a book.
+And while I've hardcoded the `subnet_id` in the enlightened example above, I would (and certainly have) extracted out either a `local` variable or a module-level `var`. And there's certainly a guiding principle as to when to extract variables, but ... (handwaving) go read a book.
 
 #### Alternate Solutions
 
-- Import the resource into terraform, so you can replace the data block with a `resource`. Pinocchio is a real boy now! A real boy who is managed by Terraform--with all that entails. This is probably the best solution, so long as you're able to make it happen.
+There are several real, alternate solutions to consider when dealing with data blocks.
+
+- Import the resource into terraform, so you can replace the data block with a `resource`. Pinocchio is a real boy now! A real boy who is managed by Terraform, with all that entails. This is probably the best solution, so long as you're able to make it happen.
 - As the GitHub Issue mentions, avoid `depends_on`, especially if you don't need it.
 
 #### More Alternate "Solutions"
+
+Here are some other things to consider.
 
 - "Hello, Pulumi Incorporated? Yes? I hear you like both **customers** and **money**? Yes? That's great! I'll be right over!"
 - Move into the mountains, live off of the land, make your own clothes. Don't worry about medical care, just crush up leaves and rub them on whatever's ailing you, and breathe in that fresh mountain air. Invigorating! Use your old work laptop as part of the shelter--a constant reminder of the old world and why you left it behind. If you're honest, it's miserable in the wild, but at least you don't have to deal with Terraform. That's what you tell yourself as you rub more crushed leaves on the rash. The rash is still growing, and it's starting to burn now more than itch. It's cold. Cold in the mountains.
@@ -208,6 +216,12 @@ I have several things to say:
 
 1. Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are _productivity landmines_.
 1. Hashicorp: seriously, these things are dangerous. `terraform validate` should warn me for every single data block I use. Sure, some data blocks can be used safely, as can some sticks of dynamite. But let's put some guardrails on these things, okay?
-1. Am I missing something? I feel like I'm missing something obvious, and I wasted all this time writing up the issue, when (_insert your simple explanation_).
+1. Am I missing something? I feel like I'm missing something obvious, and I wasted all this time writing up the issue, when (_insert your simple explanation_). Seriously, let me know if I'm doing something wrong. @pseale on twitter or `peter` `@` `pseale.com`.
 
-Seriously, let me know if I'm doing something wrong. @pseale on twitter or `peter` `@` `pseale.com`.
+#### tl;dr with bullet points and few words
+
+- Terraform data sources scary, sometimes make big boom
+- Thus, avoid
+- Import as resource instead
+- Or, hardcode instead
+- Am I crazy?
