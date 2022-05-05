@@ -16,7 +16,9 @@ Covered here:
 
 ### Introduction: What is WSL, and how is it useful?
 
-WSL is the Windows Subsystem for Linux, and I use it to:
+WSL, the Windows Subsystem for Linux, is a **surprisingly easy-to-install, convenient** way to run Linux on Windows.
+
+I use WSL to:
 
 - ssh
 - test and develop shell scripts
@@ -25,15 +27,15 @@ WSL is the Windows Subsystem for Linux, and I use it to:
 - run Windows-incompatible tools - most notably, TUIs like `tig` don't run in Windows
 - configure neovim plugins for 7-20 hours every week (this is a joke, don't hurt me)
 
-All of these things can be done without WSL, but it's **less effort** to go with the flow and say, run ssh as nature intended. As a good, real example, every complex `kubectl` script I've seen was written in bash. You can convert those scripts to PowerShell, or you can somehow run bash directly on Windows...but why? **It's easier in WSL**.
+All of these things can be done without WSL, but it's **less effort** to go with the flow and say, run ssh as nature intended. As a real example, every complex `kubectl` script I've seen was written in bash. And sure, you can convert those scripts to PowerShell, or you can somehow run bash directly on Windows...but why? **It's easier in WSL**.
 
-WSL is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros without issue. In other words, WSL doesn't do spooky things to your host like 👻👻👻cygwin👻👻👻 does. Spoken in love, cygwin.
+WSL is also well-isolated, such that I have already installed, deleted, migrated, reinstalled, and re-reinstalled distros without issue. In other words, WSL doesn't do spooky things to your host like 👻👻👻cygwin👻👻👻 does. Spoken in love, cygwin.
 
 ### Installing: WSL itself
 
 As of 2022, installing WSL2 is as simple as running (as Administrator) `wsl --install` if you're lucky. Read this if you're not lucky: https://docs.microsoft.com/en-us/windows/wsl/install#install
 
-You will need to Enable Virtualization in your BIOS if it isn't already enabled. Good luck. Everyone's BIOS is different. These instructions are pretty good? https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap `Del`, `F1`, `F2`, `F8`, `F9`, `F12` all together, as quickly as possible, while thinking happy thoughts.
+You will need to Enable Virtualization in your BIOS if it isn't already enabled. Good luck. Everyone's BIOS is different. These instructions are good: [https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html](https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html). Personally, my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap `Del`, `F1`, `F2`, `F8`, `F9`, `F12` all together like a complex piano chord, as quickly as possible, while thinking happy thoughts.
 
 Beware of older, outdated instructions for installing WSL1 and even WSL2. And in full disclosure, I'm writing this sentence in April 2022, and I'm sure my instructions will similarly fall out of date. In the future you'll spend 45 minutes begging your Windows Store Personal GAN Shopping Assistant to install WSL, and it won't, of course. Anyway good luck in the future.
 
@@ -42,6 +44,16 @@ Beware of older, outdated instructions for installing WSL1 and even WSL2. And in
 Installing a specific distro happens through the Windows Store. I don't know why, either. Maybe forcing die-hard CLI advocates to install their favorite GPL-licensed distro through the comically commercialized Windows Store is a kind of joke? Well, intentional or no, it's hilarious.
 
 If you don't know which distro to install, **pick the most recent version of Ubuntu.** And if you think you want to argue with this deliberately simplistic advice, then you are **definitely** not the target audience for it. Go in peace.
+
+I should also point out that you can use the CLI to install a limited selection of distros:
+
+```powershell
+# list available distros - more are available through the Windows Store than here
+wsl --list --online
+
+# install kali-linux
+wsl --install -d kali-linux
+```
 
 ### Surprisingly useful things
 
@@ -127,12 +139,13 @@ wsl --exec echo "WSL Distro: `${WSL_DISTRO_NAME}"
 
 ### Seamless Text Editing: VS Code
 
-VS Code (running in Windows) seamlessly edits files in WSL2, so long as you've installed either of the `Remote - WSL` or `Remote Development` extensions.
+VS Code (running in Windows) seamlessly edits files in WSL2, so long as you've installed either the `Remote - WSL` extension, or the `Remote Development` extension.
 
-To painlessly launch the current directory in WSL, do:
+To painlessly launch VS Code from within the WSL filesystem, do the same as anywhere else:
 
 ```bash
-$ code .
+# In WSL, this works the same for the end-user (you), but does very different things under the hood
+code .
 ```
 
 ### Seamless Terminal Experience: Windows Terminal
