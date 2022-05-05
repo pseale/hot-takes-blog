@@ -98,6 +98,8 @@ And let me be clear that because no one on my team knew to avoid this, we built 
 
 Let's see what such a disaster looks like:
 
+### Imminent Doom: Don't Hit That Apply Button
+
 ```hcl
 ######################################
 ## Imminent Doom: Data Block + Module + depends_on
@@ -124,7 +126,7 @@ resource "azurerm_network_interface" "example" {
 }
 ```
 
-We have introduced a `vnet` module, which outputs the long, ugly subnet ID in a convenient and encapsulated way. Harmless, right? Let's look at what `terraform plan` tells us now:
+We have introduced a `vnet` module, which outputs the long, ugly subnet ID into a convenient variable. And use it, of course. Harmless, right? Let's look at what `terraform plan` tells us now:
 
 ```hcl
 # (the following is a partial `terraform plan` output)
@@ -137,7 +139,9 @@ We have introduced a `vnet` module, which outputs the long, ugly subnet ID in a 
 }
 ```
 
-The key phrase here, which has burned itself into my retinas and haunts me at night, is `-> (known after apply) # forces replacement`. And congratulations, we're about to **replace all our infrastructure**!
+The key phrase here that has burned itself into my retinas and haunts me at night is `-> (known after apply) # forces replacement`. And congratulations, we're about to **replace all our infrastructure**!
+
+That's a bad thing.
 
 #### Explanation
 
@@ -152,28 +156,14 @@ So let's walk through what happened, to the best of my understanding.
 1. Anyway a big chunk of our infrastructure is now cursed by the dreaded `-> (known after apply) # forces replacement` message.
 1. And though I haven't tested it, according to the GitHub Issue at https://github.com/hashicorp/terraform/issues/28377 - terraform is **not bluffing** and will indeed destroy and replace our resources.
 
-Let me attempt to explain this in a different way:
-
-1. SCENE: Cozy study. A leather chair sits next to the fireplace. Camera pans to the fireplace. A gun sits on the mantle. End Scene.
-1. Time passes.
-1. SCENE: Two nerds enter. Loud and angry argument about whether 'gitops is worth it'. One stands by the fireplace. Picks up the gun, toggles the safety off, uses this as a metaphor for the relative safety of the additional gates/checks. Puts the gun back. End Scene.
-1. A great deal of time passes. Adventures!
-1. More adventures! More time passes!
-1. SCENE: "...and so terraform apply works like this gun. Running `terraform apply` cocks the gun" ... (proceeds to cock the gun) ... but nothing happens until you pull the trigger! See? It's totally safe." (puts the gun back on the mantle) "No worries, the gun's not loaded, and what's more, the safety is on!" (walks away) Camera pans to gun, lingers on it for a few seconds. End Scene.
-1. (much later) SCENE: Wildly gesticulating "looK aT Me, i'M FreeBSD!" Picks up the gun, continues flailing wildly. "POrts aND jailS!" Gesticulates even more furiously. "cHeCK OUt TheSE OBsCUre FIleSYStEms!" Impassioned gesticulation crescendoes. Drops gun, which hits the floor. Gun fires.
-
-Friend, we've just shot ourselves in the foot. I can't believe it either, but here we are.
-
-In this colorful allegory, data blocks are the gun. Everyone thinks it's harmless. And perhaps there's no real danger at first. But by the end of this (quite thrilling) movie, we've shot ourselves. In my situation, I 'shot myself' multiple times and hit roughly 40-70% of my body! And my point here is, while we see data blocks as harmless tools, we should treat them as _deadly weapons_.
-
 #### Alternate Explanations
 
-There are two succinct, authoritative answers on the GitHub Issue thread explaining what's happening, though to their detriment they do _not_ fire any guns or reference a three-act structure in their explanations:
+There are two succinct, authoritative answers on the GitHub Issue thread explaining what's happening:
 
 - [First explanation](https://github.com/hashicorp/terraform/issues/28377#issuecomment-820398608)
 - [Second explanation](https://github.com/hashicorp/terraform/issues/28377#issuecomment-824070018)
 
-#### Solution
+#### Solution: Stop Using Data Blocks
 
 One solution is to stop using data blocks. Here's the example, 'fixed':
 
@@ -196,14 +186,14 @@ Before enlightenment: chop wood, carry water. After enlightenment: chop wood, ca
 
 And while I've hardcoded the `subnet_id` in the enlightened example above, I would (and certainly have) extracted out either a `local` variable or a module-level `var`. And there's certainly a guiding principle as to when to extract variables, but ... (handwaving) go read a book.
 
-#### Alternate Solutions
+#### Alternate Solutions: Import Everything, Stop Using depends_on
 
 There are several real, alternate solutions to consider when dealing with data blocks.
 
 - Import the resource into terraform, so you can replace the data block with a `resource`. Pinocchio is a real boy now! A real boy who is managed by Terraform, with all that entails. This is probably the best solution, so long as you're able to make it happen.
 - As the GitHub Issue mentions, avoid `depends_on`, especially if you don't need it.
 
-#### More Alternate "Solutions"
+#### More "Solutions"
 
 Here are some other things to consider.
 
@@ -215,7 +205,7 @@ Here are some other things to consider.
 I have several things to say:
 
 1. Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are _productivity landmines_.
-1. Hashicorp: seriously, these things are dangerous. `terraform validate` should warn me for every single data block I use. Sure, some data blocks can be used safely, as can some sticks of dynamite. But let's put some guardrails on these things, okay?
+1. Hashicorp: seriously, these things are dangerous. `terraform validate` should warn me for every single data block I use. Sure, some data blocks can be used safely, as can sticks of dynamite. But let's put some guardrails on these things, okay?
 1. Am I missing something? I feel like I'm missing something obvious, and I wasted all this time writing up the issue, when (_insert your simple explanation_). Seriously, let me know if I'm doing something wrong. @pseale on twitter or `peter` `@` `pseale.com`.
 
 #### tl;dr with bullet points and few words
