@@ -5,7 +5,7 @@ date = "2022-05-25"
 draft = true
 +++
 
-##### Spicy Peppers Rating System | 🌶🌶 - Two Peppers | Disturbing Violence Against Repositories
+##### Spicy Peppers Rating System | 🌶🌶 - Two Peppers | Disturbing Violence Against Repositories and the Prevailing Wisdom
 
 ### Summary
 
@@ -20,11 +20,11 @@ Read on and I'll do my best to convince you that, by the end, this is an ideal s
 
 ### Services: an elegant weapon for a more civilized age
 
-In the beginning (2002), Martin Fowler wrote [PoEAA](https://www.martinfowler.com/eaaCatalog/). And it was good! He recommended, among many good things, separating code into a Service Layer (which we will discuss). And also things called Gateways, and all the data access patterns, and a host of other good things. And everyone read the holy texts. Still good! Unfortunately for us, every five years, the number of programmers doubled. And at some point, people stopped reading the holy texts. Certainly I didn't read it. If I owned a copy of PoEAA, which I honestly can't recall, it would have been on my shelf, unread, in mint condition, next to Eric Evans' DDD book I also never read.
+In the beginning (2002), Martin Fowler wrote [PoEAA](https://www.martinfowler.com/eaaCatalog/). And it was good! He recommended, among many good things, separating code into a Service Layer (which we will discuss). And everyone read the holy texts. Still good! Unfortunately for us, every five years, the number of programmers doubled. And at some point, people stopped reading the holy texts. Certainly I didn't read it. If I owned a copy of PoEAA, which I honestly can't recall, it would have been on my shelf, unread, in mint condition, next to Eric Evans' DDD book I also never read.
 
-Anyway, in this savage prehistoric time, certainly his descriptions of common application architecture were appropriate. Remember, many of us still believed that the apex of ideal software engineering involved non-coding architects drawing diagrams in Rational Rose. And others of us did serious work in VBA. It was a wild time, when monsters roamed the earth.
+Anyway, in this savage prehistoric time, certainly his descriptions of common application architecture were appropriate. Remember, many of us still believed that the apex of ideal software engineering involved non-coding architects drawing diagrams in Rational Rose. And others of us did serious work in VBA. There were serious discussions about Truly Relational Database Management Systems (6NF, it's real) and how much better they were. It was a wild time, when monsters roamed the earth.
 
-So let me be clear: there is nothing wrong with (Services)[https://martinfowler.com/eaaCatalog/serviceLayer.html]. We still need a layer of separation between the UI, which keeps careful watch on inputs, and the gooey center. We need a seam.
+So let me be clear: there is nothing wrong with (Services)[https://martinfowler.com/eaaCatalog/serviceLayer.html]. We still need separation between the outward-facing UI, which keeps careful watch on inputs, and the gooey center. We need a seam.
 
 But I choose to organize a little differently. What I propose is just a little twist away from a Service. Here we go.
 
